@@ -1,0 +1,62 @@
+--------------------INTERPACKET-DEPARTURE-LENGTH--------------------
+
+	— Function: int nanosleep (const struct timespec *requested_time, struct timespec *remaining)
+
+	    If resolution to seconds is not enough the nanosleep function can be used. As the name suggests the sleep interval can be specified in nanoseconds. The actual elapsed time of the sleep interval might be longer since the system rounds the elapsed time you request up to the next integer multiple of the actual resolution the system can deliver.
+
+	    *requested_time is the elapsed time of the interval you want to sleep.
+
+	    The function returns as *remaining the elapsed time left in the interval for which you requested to sleep. If the interval completed without getting interrupted by a signal, this is zero.
+
+	    struct timespec is described in See Elapsed Time.
+
+	    If the function returns because the interval is over the return value is zero. If the function returns -1 the global variable errno is set to the following values:
+
+	    EINTR
+	        The call was interrupted because a signal was delivered to the thread. If the remaining parameter is not the null pointer the structure pointed to by remaining is updated to contain the remaining elapsed time.
+	    EINVAL
+	        The nanosecond value in the requested_time parameter contains an illegal value. Either the value is negative or greater than or equal to 1000 million. 
+
+	    This function is a cancellation point in multi-threaded programs. This is a problem if the thread allocates some resources (like memory, file descriptors, semaphores or whatever) at the time nanosleep is called. If the thread gets canceled these resources stay allocated until the program ends. To avoid this calls to nanosleep should be protected using cancellation handlers.
+
+	    The nanosleep function is declared in time.h. 
+
+--------------------------------------------------------------------
+
+	The setitimer function is the primary means for setting an alarm. This facility is declared in the header file sys/time.h. The alarm function, declared in unistd.h, provides a somewhat simpler interface for setting the real-time timer.
+	— Data Type: struct itimerval
+
+	    This structure is used to specify when a timer should expire. It contains the following members:
+
+	    struct timeval it_interval
+	        This is the period between successive timer interrupts. If zero, the alarm will only be sent once.
+	    struct timeval it_value
+	        This is the period between now and the first timer interrupt. If zero, the alarm is disabled. 
+
+	    The struct timeval data type is described in Elapsed Time. 
+
+	— Function: int setitimer (int which, const struct itimerval *new, struct itimerval *old)
+
+	    The setitimer function sets the timer specified by which according to new. The which argument can have a value of ITIMER_REAL, ITIMER_VIRTUAL, or ITIMER_PROF.
+
+	    If old is not a null pointer, setitimer returns information about any previous unexpired timer of the same kind in the structure it points to.
+
+	    The return value is 0 on success and -1 on failure. The following errno error conditions are defined for this function:
+
+	    EINVAL
+	        The timer period is too large. 
+
+	— Function: int getitimer (int which, struct itimerval *old)
+
+	    The getitimer function stores information about the timer specified by which in the structure pointed at by old.
+
+	    The return value and error conditions are the same as for setitimer. 
+
+	— Constants: int which
+
+		ITIMER_REAL
+		    This constant can be used as the which argument to the setitimer and getitimer functions to specify the real-time timer.
+		ITIMER_VIRTUAL
+		    This constant can be used as the which argument to the setitimer and getitimer functions to specify the virtual timer.
+		ITIMER_PROF
+		    This constant can be used as the which argument to the setitimer and getitimer functions to specify the profiling timer. 

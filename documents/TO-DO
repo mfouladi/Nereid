@@ -1,0 +1,20 @@
+-------------------------TO-DO-------------------------
+1) Implement Sender and Receiver
+	A) Sender
+		i) packet train
+			a) interpacket departure length
+			b) time stamping at finest granularity
+			c) writing index value for each packet
+			d) number of packets to send
+			e) size of packet
+			f) creating udp packet/using udp protocol
+				1) creating udp header
+		ii) icmp
+			a) creating icmp packets
+				1) icmp header
+	B)Receiver
+		i) receive udp packets
+			a) discarding unnecessary data
+			b) immediate time stamp
+			c) immediate buffer storage
+		ii) spoofing

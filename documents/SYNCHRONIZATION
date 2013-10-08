@@ -1,0 +1,2 @@
+-------------------------SYNCHRONIZATION-------------------------
+	The interface for this mechanism is provided by the adjtimex system call. 

@@ -1,0 +1,70 @@
+-------------------------TIMESTAMPING-------------------------
+	
+	#include <sys/time.h>
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	tv.tv_sec // seconds
+	tv.tv_usec // microseconds
+
+--------------------------------------------------------------
+
+	#include <sys/time.h>
+	//...
+	struct timeval tv1, tv2, diff;
+
+	// get the first time:
+	gettimeofday(&tv1, NULL);
+
+	// do whatever it is you want to time
+	// ...
+
+	// get the second time:
+	gettimeofday(&tv2, NULL);
+
+	// get the difference:
+
+	int result = timeval_subtract(&diff, &tv1, &tv2);
+
+	// the difference is storid in diff now.
+
+--------------------------------------------------------------
+
+	/* Subtract the `struct timeval' values X and Y,
+	    storing the result in RESULT.
+	    Return 1 if the difference is negative, otherwise 0.  */
+
+	 int
+	 timeval_subtract (result, x, y)
+	      struct timeval *result, *x, *y;
+	 {
+	   /* Perform the carry for the later subtraction by updating y. */
+	   if (x->tv_usec < y->tv_usec) {
+	     int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+	     y->tv_usec -= 1000000 * nsec;
+	     y->tv_sec += nsec;
+	   }
+	   if (x->tv_usec - y->tv_usec > 1000000) {
+	     int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+	     y->tv_usec += 1000000 * nsec;
+	     y->tv_sec -= nsec;
+	   }
+
+	   /* Compute the time remaining to wait.
+	      tv_usec is certainly positive. */
+	   result->tv_sec = x->tv_sec - y->tv_sec;
+	   result->tv_usec = x->tv_usec - y->tv_usec;
+
+	   /* Return 1 if result is negative. */
+	   return x->tv_sec < y->tv_sec;
+	 }
+
+--------------------------------------------------------------
+	http://www.gnu.org/software/libc/manual/html_node/Elapsed-Time.html
+	— Data Type: struct timespec
+
+	    The struct timespec structure represents an elapsed time. It is declared in time.h and has the following members:
+
+	    long int tv_sec
+	        This represents the number of whole seconds of elapsed time.
+	    long int tv_nsec
+	        This is the rest of the elapsed time (a fraction of a second), represented as the number of nanoseconds. It is always less than one billion. 
